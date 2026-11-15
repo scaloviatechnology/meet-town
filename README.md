@@ -4,9 +4,9 @@
 
 ---
 
-## 🚀 Installation Commands per OS
+## 🚀 One-Line Installation Command
 
-The automated installer will automatically check for **Node.js (v18+)** and install/upgrade it if necessary before building the desktop application.
+The automated installer will check for **Node.js (v18+)**, install/upgrade it if necessary, build the desktop app, and **automatically create a desktop shortcut icon** on your computer.
 
 ### 🐧 Linux (Ubuntu, Zorin OS, Debian, Fedora, etc.)
 Open your terminal and run:
@@ -28,13 +28,9 @@ git clone https://github.com/scaloviatechnology/meet-town.git ~/.meettown && cd 
 
 ---
 
-## ▶️ Starting the Desktop App
-
-Once installed on any OS, teammates can start the virtual office and desktop client with a single command:
-
-```bash
-bash ~/.meettown/start-meettown.sh
-```
+## 🖥️ How to Open Meet-Town
+- **First Time**: Run the one-line installation command above.
+- **Next Time Onwards**: Simply **double-click the "Meet-Town" icon on your Desktop**! The app and background signaling server will start up automatically.
 
 ---
 
