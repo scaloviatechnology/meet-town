@@ -4,24 +4,33 @@
 
 ---
 
-## 🚀 One-Line Installation Command for Team Members
+## 🚀 Installation Commands per OS
 
-Team members can install and run Meet-Town instantly on their PC (Linux, macOS, or Windows WSL) using the GitHub installer script:
+The automated installer will automatically check for **Node.js (v18+)** and install/upgrade it if necessary before building the desktop application.
 
+### 🐧 Linux (Ubuntu, Zorin OS, Debian, Fedora, etc.)
+Open your terminal and run:
 ```bash
 git clone https://github.com/scaloviatechnology/meet-town.git ~/.meettown && cd ~/.meettown && bash install.sh
 ```
 
-Or if hosted, via curl/bash:
+### 🍏 macOS (MacBook, iMac, Mac mini)
+Open your Terminal and run:
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/scaloviatechnology/meet-town/main/install.sh)
+git clone https://github.com/scaloviatechnology/meet-town.git ~/.meettown && cd ~/.meettown && bash install.sh
+```
+
+### 🪟 Windows (via Git Bash or WSL)
+Open **Git Bash** or **WSL** and run:
+```bash
+git clone https://github.com/scaloviatechnology/meet-town.git ~/.meettown && cd ~/.meettown && bash install.sh
 ```
 
 ---
 
 ## ▶️ Starting the Desktop App
 
-Once installed, teammates can start the virtual office and desktop client with a single command:
+Once installed on any OS, teammates can start the virtual office and desktop client with a single command:
 
 ```bash
 bash ~/.meettown/start-meettown.sh
