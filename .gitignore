@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+dist/
+build/
+.DS_Store
+
+# Environment & Config
+.env
+.env.local
+
+# Claude & Internal Artifacts
+.claude/
+.claude-project/
+*.log
+*.tmp
