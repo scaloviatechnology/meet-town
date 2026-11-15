@@ -44,9 +44,3 @@ bash ~/.meettown/start-meettown.sh
 - **P2P Video Meetings & Screen Sharing**: High-quality peer-to-peer video/audio streams and desktop screen sharing with Fullscreen view support.
 - **Team Members Sidebar**: Real-time list tracking active online and offline team members.
 - **Direct Meeting Invites & Profile Modals**: Click any member's avatar to view their profile and invite them to a private meeting or call with instant in-app alerts.
-
----
-
-## Security Documentation
-- Security Audit Report: [`docs/SECURITY_AUDIT_REPORT.md`](docs/SECURITY_AUDIT_REPORT.md)
-- Security Remediation Report: [`docs/SECURITY_REMEDIATION_REPORT.md`](docs/SECURITY_REMEDIATION_REPORT.md)
