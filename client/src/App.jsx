@@ -873,7 +873,7 @@ export default function App() {
           className="p-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl transition cursor-pointer"
           title="Edit Profile"
         >
-          <Smile className="w-5 h-5" />
+          <Edit3 className="w-5 h-5" />
         </button>
 
         <button
