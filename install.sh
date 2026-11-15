@@ -76,7 +76,16 @@ chmod +x "${INSTALL_DIR}/start-meettown.sh"
 
 # Cross-platform Desktop Shortcut & App Icon Generator
 echo "-> Configuring Desktop App Icon & Shortcuts..."
-ICON_PATH="${INSTALL_DIR}/client/assets/icon.svg"
+ICON_SRC="${INSTALL_DIR}/client/assets/icon.svg"
+PNG_ICON="${INSTALL_DIR}/client/assets/icon.png"
+
+if command -v rsvg-convert &> /dev/null; then
+    rsvg-convert -w 256 -h 256 "$ICON_SRC" -o "$PNG_ICON" 2>/dev/null || cp "$ICON_SRC" "$PNG_ICON"
+elif command -v convert &> /dev/null; then
+    convert -background none -resize 256x256 "$ICON_SRC" "$PNG_ICON" 2>/dev/null || cp "$ICON_SRC" "$PNG_ICON"
+else
+    cp "$ICON_SRC" "$PNG_ICON"
+fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     mkdir -p "${HOME}/.local/share/applications"
@@ -85,11 +94,12 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 Name=Meet-Town
 Comment=Gather Town Style Virtual Office
 Exec=bash ${INSTALL_DIR}/start-meettown.sh
-Icon=${ICON_PATH}
+Icon=${PNG_ICON}
 Terminal=false
 Type=Application
 Categories=Network;Chat;Office;
 StartupNotify=true
+StartupWMClass=meet-town
 EOF
     chmod +x "${HOME}/.local/share/applications/meettown.desktop"
     if [ -d "$DESKTOP_DIR" ]; then
@@ -112,7 +122,7 @@ EOF
     echo "-> macOS desktop launcher created!"
 
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" || "$OSTYPE" == "cygwin" ]]; then
-    powershell.exe -Command "\$WshShell = New-Object -ComObject WScript.Shell; \$Shortcut = \$WshShell.CreateShortcut('${DESKTOP_DIR}\\Meet-Town.lnk'); \$Shortcut.TargetPath = 'bash.exe'; \$Shortcut.Arguments = '${INSTALL_DIR}/start-meettown.sh'; \$Shortcut.IconLocation = '${INSTALL_DIR}\\client\\assets\\icon.svg'; \$Shortcut.Save()" 2>/dev/null || true
+    powershell.exe -Command "\$WshShell = New-Object -ComObject WScript.Shell; \$Shortcut = \$WshShell.CreateShortcut('${DESKTOP_DIR}\\Meet-Town.lnk'); \$Shortcut.TargetPath = 'bash.exe'; \$Shortcut.Arguments = '${INSTALL_DIR}/start-meettown.sh'; \$Shortcut.IconLocation = '${INSTALL_DIR}\\client\\assets\\icon.png'; \$Shortcut.Save()" 2>/dev/null || true
     echo "-> Windows desktop shortcut with icon created!"
 fi
 
