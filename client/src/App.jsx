@@ -614,27 +614,24 @@ export default function App() {
         </div>
       )}
 
-      {/* Top Floating Video Pills - Centered Align with Fullscreen on click */}
+      {/* Top Floating Video Pills - Centered Align with Fullscreen on click (ONLY shown if camActive or isScreenSharing) */}
       <div className="absolute top-4 left-6 right-80 z-40 flex justify-center gap-3 overflow-x-auto pb-2 pointer-events-auto">
-        {/* Local Video Pill */}
-        <div
-          onClick={() => setFullscreenStream({ stream: localStreamRef.current, name: `${userName} (You)` })}
-          className="relative group bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden w-40 h-24 shadow-xl flex items-center justify-center shrink-0 cursor-pointer"
-          title="Click for Fullscreen"
-        >
-          <video ref={localVideoRef} autoPlay muted playsInline className={`w-full h-full object-cover ${!camActive ? 'hidden' : ''}`} />
-          {!camActive && (
-            <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-xl shadow overflow-hidden">
-              {customImage ? <img src={customImage} alt="Avatar" className="w-full h-full object-cover" /> : selectedAvatar.emoji}
+        {/* Local Video Pill (Shown only when camera is active) */}
+        {camActive && (
+          <div
+            onClick={() => setFullscreenStream({ stream: localStreamRef.current, name: `${userName} (You)` })}
+            className="relative group bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden w-40 h-24 shadow-xl flex items-center justify-center shrink-0 cursor-pointer"
+            title="Click for Fullscreen"
+          >
+            <video ref={localVideoRef} autoPlay muted playsInline className="w-full h-full object-cover" />
+            <div className="absolute bottom-1.5 left-2 bg-slate-900/90 px-2 py-0.5 rounded-full text-[10px] font-medium text-slate-200">
+              You {isScreenSharing && '• Sharing'}
             </div>
-          )}
-          <div className="absolute bottom-1.5 left-2 bg-slate-900/90 px-2 py-0.5 rounded-full text-[10px] font-medium text-slate-200">
-            You {isScreenSharing && '• Sharing'}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
+              <Maximize2 className="w-4 h-4" /> Fullscreen
+            </div>
           </div>
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
-            <Maximize2 className="w-4 h-4" /> Fullscreen
-          </div>
-        </div>
+        )}
 
         {/* Screen Share Pill */}
         {isScreenSharing && (
@@ -920,7 +917,7 @@ export default function App() {
         </div>
       </aside>
 
-      {/* Bottom Gather Town Control Bar */}
+      {/* Bottom Gather Town Control Bar (No edit emoji button, only mic, cam, screen share, edit profile icon, and leave) */}
       <div className="absolute bottom-4 left-[calc(50%-9rem)] -translate-x-1/2 bg-[#1b2230]/95 border border-slate-700 px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-4 z-50 backdrop-blur">
         <div
           onClick={() => {
@@ -969,18 +966,6 @@ export default function App() {
           title="Share Screen"
         >
           {isScreenSharing ? <Monitor className="w-5 h-5 animate-pulse" /> : <MonitorOff className="w-5 h-5" />}
-        </button>
-
-        <button
-          onClick={() => {
-            setEditName(userName);
-            setEditActivity(activity);
-            setShowEditProfileModal(true);
-          }}
-          className="p-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl transition cursor-pointer"
-          title="Edit Profile"
-        >
-          <Edit3 className="w-5 h-5" />
         </button>
 
         <button
