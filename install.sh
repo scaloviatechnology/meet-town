@@ -2,12 +2,20 @@
 set -e
 
 REPO_URL="https://github.com/scaloviatechnology/meet-town.git"
-INSTALL_DIR="${HOME}/.meettown"
 
-echo "=== Installing Meet-Town from GitHub ==="
+# Determine OS installation directory
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" || "$OSTYPE" == "cygwin" ]]; then
+    INSTALL_DIR="${USERPROFILE}/.meettown"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    INSTALL_DIR="${HOME}/.meettown"
+else
+    INSTALL_DIR="${HOME}/.meettown"
+fi
+
+echo "=== Installing Meet-Town ==="
 
 if ! command -v node &> /dev/null; then
-    echo "Error: Node.js (v18+) is required. Please install Node.js and try again."
+    echo "Error: Node.js (v18+) is required. Please install Node.js from https://nodejs.org/ and re-run."
     exit 1
 fi
 
@@ -30,10 +38,12 @@ cd ../client
 npm install
 npm run build
 
-# Create global launcher script
+# Create platform-aware startup script
 cat << 'EOF' > "${INSTALL_DIR}/start-meettown.sh"
 #!/usr/bin/env bash
 INSTALL_DIR="${HOME}/.meettown"
+[[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]] && INSTALL_DIR="${USERPROFILE}/.meettown"
+
 echo "Starting Meet-Town Signaling Server..."
 cd "${INSTALL_DIR}/server"
 PORT=4000 node index.js &
@@ -52,9 +62,8 @@ EOF
 
 chmod +x "${INSTALL_DIR}/start-meettown.sh"
 
-# Create symlink or add to bin if possible
 echo "=================================================="
 echo "✅ Meet-Town successfully installed!"
 echo "To start Meet-Town anytime, run:"
-echo "  bash ~/.meettown/start-meettown.sh"
+echo "  bash ${INSTALL_DIR}/start-meettown.sh"
 echo "=================================================="
