@@ -136,7 +136,6 @@ export default function App() {
     });
     setSocket(newSocket);
 
-    // Get user media but set initial track enabled states to false (mic & cam OFF by default)
     navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 360, frameRate: 24 }, audio: true })
       .then((stream) => {
         stream.getAudioTracks().forEach(t => t.enabled = false);
@@ -238,6 +237,13 @@ export default function App() {
       screenVideoRef.current.srcObject = screenStreamRef.current;
     }
   }, [isScreenSharing]);
+
+  // Ensure local video element receives stream when camActive becomes true
+  useEffect(() => {
+    if (camActive && localStreamRef.current && localVideoRef.current) {
+      localVideoRef.current.srcObject = localStreamRef.current;
+    }
+  }, [camActive]);
 
   const updateAvatarSelection = (newAvatar) => {
     setSelectedAvatar(newAvatar);
@@ -917,7 +923,7 @@ export default function App() {
         </div>
       </aside>
 
-      {/* Bottom Gather Town Control Bar (No edit emoji button, only mic, cam, screen share, edit profile icon, and leave) */}
+      {/* Bottom Gather Town Control Bar */}
       <div className="absolute bottom-4 left-[calc(50%-9rem)] -translate-x-1/2 bg-[#1b2230]/95 border border-slate-700 px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-4 z-50 backdrop-blur">
         <div
           onClick={() => {
