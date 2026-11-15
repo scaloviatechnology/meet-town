@@ -54,6 +54,7 @@ npm install --production
 echo "-> Installing Client Dependencies & Building..."
 cd ../client
 npm install
+node make-png.js
 npm run build
 
 # Create unified startup script
@@ -76,16 +77,7 @@ chmod +x "${INSTALL_DIR}/start-meettown.sh"
 
 # Cross-platform Desktop Shortcut & App Icon Generator
 echo "-> Configuring Desktop App Icon & Shortcuts..."
-ICON_SRC="${INSTALL_DIR}/client/assets/icon.svg"
 PNG_ICON="${INSTALL_DIR}/client/assets/icon.png"
-
-if command -v rsvg-convert &> /dev/null; then
-    rsvg-convert -w 256 -h 256 "$ICON_SRC" -o "$PNG_ICON" 2>/dev/null || cp "$ICON_SRC" "$PNG_ICON"
-elif command -v convert &> /dev/null; then
-    convert -background none -resize 256x256 "$ICON_SRC" "$PNG_ICON" 2>/dev/null || cp "$ICON_SRC" "$PNG_ICON"
-else
-    cp "$ICON_SRC" "$PNG_ICON"
-fi
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     mkdir -p "${HOME}/.local/share/applications"
