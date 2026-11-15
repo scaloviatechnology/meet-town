@@ -505,8 +505,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Top Floating Video Pills */}
-      <div className="absolute top-4 left-6 right-80 z-40 flex gap-3 overflow-x-auto pb-2 pointer-events-auto">
+      {/* Top Floating Video Pills - Centered Align */}
+      <div className="absolute top-4 left-6 right-80 z-40 flex justify-center gap-3 overflow-x-auto pb-2 pointer-events-auto">
         {/* Local Video Pill */}
         <div className="relative bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden w-40 h-24 shadow-xl flex items-center justify-center shrink-0">
           <video ref={localVideoRef} autoPlay muted playsInline className={`w-full h-full object-cover ${!camActive ? 'hidden' : ''}`} />
@@ -671,16 +671,30 @@ export default function App() {
         </div>
       )}
 
-      {/* Lightweight 2D Pixel Office Floor */}
+      {/* Lightweight 2D Pixel Office Floor with 4 Meeting Rooms in 2 Rows */}
       <div className="flex-1 relative bg-[#171c28] overflow-hidden flex flex-col">
-        <div className="flex-1 relative bg-[radial-gradient(#263042_1px,transparent_1px)] [background-size:28px_28px] overflow-hidden">
-          {/* Relaxed Office Zones */}
-          <div className="absolute top-12 left-12 w-[350px] h-[300px] bg-indigo-950/25 border border-indigo-500/20 rounded-3xl p-6 flex flex-col justify-between">
-            <span className="text-xs text-indigo-300 font-bold uppercase tracking-wider">💻 Dev Lounge</span>
+        <div className="flex-1 relative bg-[radial-gradient(#263042_1px,transparent_1px)] [background-size:28px_28px] overflow-hidden p-8 flex flex-col justify-around">
+
+          {/* Row 1: 2 Meeting Rooms */}
+          <div className="flex justify-around gap-6">
+            <div className="w-[45%] h-[260px] bg-indigo-950/25 border border-indigo-500/20 rounded-3xl p-6 flex flex-col justify-between shadow-lg">
+              <span className="text-xs text-indigo-300 font-bold uppercase tracking-wider">💻 Dev Lounge</span>
+            </div>
+
+            <div className="w-[45%] h-[260px] bg-purple-950/25 border border-purple-500/20 rounded-3xl p-6 flex flex-col justify-between shadow-lg">
+              <span className="text-xs text-purple-300 font-bold uppercase tracking-wider">🎨 Design Studio</span>
+            </div>
           </div>
 
-          <div className="absolute top-12 right-12 w-[350px] h-[300px] bg-purple-950/25 border border-purple-500/20 rounded-3xl p-6 flex flex-col justify-between">
-            <span className="text-xs text-purple-300 font-bold uppercase tracking-wider">🎨 Design Studio</span>
+          {/* Row 2: 2 Meeting Rooms */}
+          <div className="flex justify-around gap-6">
+            <div className="w-[45%] h-[260px] bg-emerald-950/25 border border-emerald-500/20 rounded-3xl p-6 flex flex-col justify-between shadow-lg">
+              <span className="text-xs text-emerald-300 font-bold uppercase tracking-wider">⚡ Standup & War Room</span>
+            </div>
+
+            <div className="w-[45%] h-[260px] bg-amber-950/25 border border-amber-500/20 rounded-3xl p-6 flex flex-col justify-between shadow-lg">
+              <span className="text-xs text-amber-300 font-bold uppercase tracking-wider">☕ Coffee & Chill Corner</span>
+            </div>
           </div>
 
           {/* My Avatar */}
