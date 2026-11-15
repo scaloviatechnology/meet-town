@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import {
   Video, VideoOff, Mic, MicOff, Monitor, MonitorOff,
-  Users, PhoneOff, Smile, Maximize2, X, UserPlus, PhoneCall, Sparkles, Upload
+  Users, PhoneOff, Smile, Maximize2, X, UserPlus, PhoneCall, Sparkles, Upload, Edit3
 } from 'lucide-react';
 
 const SOCKET_URL = 'http://localhost:4000';
@@ -38,6 +38,11 @@ export default function App() {
   const [customImage, setCustomImage] = useState(savedProfile?.customImage || null);
   const [showCharacterModal, setShowCharacterModal] = useState(false);
 
+  // States for Editing own profile modal
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [editName, setEditName] = useState(userName);
+  const [editActivity, setEditActivity] = useState(activity);
+
   const [socket, setSocket] = useState(null);
   const [allUsers, setAllUsers] = useState([]);
 
@@ -61,6 +66,7 @@ export default function App() {
   const localStreamRef = useRef(null);
   const screenStreamRef = useRef(null);
   const fileInputRef = useRef(null);
+  const editFileInputRef = useRef(null);
 
   const peersRef = useRef({});
   const [remoteStreams, setRemoteStreams] = useState({});
@@ -248,6 +254,14 @@ export default function App() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleEditProfileSave = () => {
+    if (!editName.trim()) return;
+    setUserName(editName);
+    setActivity(editActivity);
+    setShowEditProfileModal(false);
+    socket?.emit('update-activity', { activity: editActivity, userName: editName });
   };
 
   const createPeerConnection = (peerId, socketInstance) => {
@@ -586,6 +600,77 @@ export default function App() {
         </div>
       )}
 
+      {/* Edit My Profile Modal */}
+      {showEditProfileModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1b2230] border border-slate-700 p-6 rounded-3xl max-w-sm w-full space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-lg text-white">Edit Your Profile</h3>
+              <button onClick={() => setShowEditProfileModal(false)} className="text-slate-400 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Avatar Preview & Upload */}
+            <div className="flex flex-col items-center space-y-3">
+              <div className="w-20 h-20 rounded-2xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-4xl overflow-hidden shadow-inner">
+                {customImage ? <img src={customImage} alt="Avatar" className="w-full h-full object-cover" /> : selectedAvatar.emoji}
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowCharacterModal(true)}
+                  className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-xl transition cursor-pointer"
+                >
+                  Choose Emoji
+                </button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={editFileInputRef}
+                  onChange={handleCustomImageUpload}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => editFileInputRef.current?.click()}
+                  className="px-3 py-1.5 bg-indigo-600/30 hover:bg-indigo-600/40 text-indigo-200 text-xs font-semibold rounded-xl transition cursor-pointer flex items-center gap-1"
+                >
+                  <Upload className="w-3.5 h-3.5" /> Upload Photo
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <div>
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Your Name</label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  className="mt-1 w-full bg-[#121620] border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Activity / Status</label>
+                <input
+                  type="text"
+                  value={editActivity}
+                  onChange={e => setEditActivity(e.target.value)}
+                  className="mt-1 w-full bg-[#121620] border border-slate-700 rounded-xl px-3.5 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={handleEditProfileSave}
+              className="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-sm transition cursor-pointer shadow-lg shadow-emerald-500/20"
+            >
+              Save Changes ✨
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Lightweight 2D Pixel Office Floor */}
       <div className="flex-1 relative bg-[#171c28] overflow-hidden flex flex-col">
         <div className="flex-1 relative bg-[radial-gradient(#263042_1px,transparent_1px)] [background-size:28px_28px] overflow-hidden">
@@ -658,8 +743,17 @@ export default function App() {
               {allUsers.map((u) => (
                 <div
                   key={u.id}
-                  onClick={() => setSelectedProfileUser(u)}
+                  onClick={() => {
+                    if (u.id === socket?.id) {
+                      setEditName(userName);
+                      setEditActivity(activity);
+                      setShowEditProfileModal(true);
+                    } else {
+                      setSelectedProfileUser(u);
+                    }
+                  }}
                   className="bg-[#1b2230] border border-slate-800 hover:border-slate-600 p-2.5 rounded-xl flex items-center justify-between transition cursor-pointer"
+                  title={u.id === socket?.id ? "Click to edit your profile" : "Click to view profile"}
                 >
                   <div className="flex items-center space-x-2.5 truncate">
                     <div className="w-8 h-8 rounded-xl bg-slate-700 flex items-center justify-center text-lg shrink-0 overflow-hidden">
@@ -707,12 +801,25 @@ export default function App() {
 
       {/* Bottom Gather Town Control Bar */}
       <div className="absolute bottom-4 left-[calc(50%-9rem)] -translate-x-1/2 bg-[#1b2230]/95 border border-slate-700 px-6 py-3 rounded-2xl shadow-2xl flex items-center space-x-4 z-50 backdrop-blur">
-        <div className="flex items-center space-x-3 pr-4 border-r border-slate-700">
-          <div className="w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-xl overflow-hidden">
+        <div
+          onClick={() => {
+            setEditName(userName);
+            setEditActivity(activity);
+            setShowEditProfileModal(true);
+          }}
+          className="flex items-center space-x-3 pr-4 border-r border-slate-700 cursor-pointer group hover:opacity-90 transition"
+          title="Click to edit your name and avatar"
+        >
+          <div className="relative w-10 h-10 rounded-xl bg-indigo-600/30 border border-indigo-500/40 flex items-center justify-center text-xl overflow-hidden">
             {customImage ? <img src={customImage} alt="Avatar" className="w-full h-full object-cover" /> : selectedAvatar.emoji}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white">
+              <Edit3 className="w-4 h-4" />
+            </div>
           </div>
           <div>
-            <div className="text-xs font-bold text-white">{userName}</div>
+            <div className="text-xs font-bold text-white flex items-center gap-1">
+              {userName} <Edit3 className="w-3 h-3 text-indigo-400 opacity-0 group-hover:opacity-100 transition" />
+            </div>
             <div className="text-[10px] text-emerald-400 font-medium flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Online
             </div>
@@ -744,9 +851,13 @@ export default function App() {
         </button>
 
         <button
-          onClick={() => setShowCharacterModal(true)}
+          onClick={() => {
+            setEditName(userName);
+            setEditActivity(activity);
+            setShowEditProfileModal(true);
+          }}
           className="p-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl transition cursor-pointer"
-          title="Edit Avatar"
+          title="Edit Profile"
         >
           <Smile className="w-5 h-5" />
         </button>
