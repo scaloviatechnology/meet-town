@@ -14,7 +14,7 @@ else
     DESKTOP_DIR="${HOME}/Desktop"
 fi
 
-echo "=== Installing Meet-Town Across Platforms (Linux, macOS, Windows) ==="
+echo "=== Installing Meet-Town & App Icon Across Platforms ==="
 
 # Check Node.js v18+
 has_node=false
@@ -74,8 +74,9 @@ EOF
 
 chmod +x "${INSTALL_DIR}/start-meettown.sh"
 
-# Cross-platform Desktop Shortcut Generator
-echo "-> Creating Cross-Platform Desktop Shortcut..."
+# Cross-platform Desktop Shortcut & App Icon Generator
+echo "-> Configuring Desktop App Icon & Shortcuts..."
+ICON_PATH="${INSTALL_DIR}/client/assets/icon.svg"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     mkdir -p "${HOME}/.local/share/applications"
@@ -84,6 +85,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 Name=Meet-Town
 Comment=Gather Town Style Virtual Office
 Exec=bash ${INSTALL_DIR}/start-meettown.sh
+Icon=${ICON_PATH}
 Terminal=false
 Type=Application
 Categories=Network;Chat;Office;
@@ -96,10 +98,9 @@ EOF
         gio set "${DESKTOP_DIR}/Meet-Town.desktop" metadata::trusted true 2>/dev/null || true
     fi
     update-desktop-database "${HOME}/.local/share/applications" 2>/dev/null || true
-    echo "-> Linux (.desktop) shortcut created!"
+    echo "-> Linux application menu and desktop icon created!"
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS .command script launcher on Desktop
     cat << EOF > "${INSTALL_DIR}/Meet-Town.command"
 #!/usr/bin/env bash
 bash ${INSTALL_DIR}/start-meettown.sh
@@ -108,15 +109,14 @@ EOF
     if [ -d "$DESKTOP_DIR" ]; then
         ln -sf "${INSTALL_DIR}/Meet-Town.command" "${DESKTOP_DIR}/Meet-Town"
     fi
-    echo "-> macOS Desktop shortcut created!"
+    echo "-> macOS desktop launcher created!"
 
 elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" || "$OSTYPE" == "cygwin" ]]; then
-    # Windows PowerShell VBScript shortcut generator on Desktop
-    powershell.exe -Command "\$WshShell = New-Object -ComObject WScript.Shell; \$Shortcut = \$WshShell.CreateShortcut('${DESKTOP_DIR}\\Meet-Town.lnk'); \$Shortcut.TargetPath = 'bash.exe'; \$Shortcut.Arguments = '${INSTALL_DIR}/start-meettown.sh'; \$Shortcut.Save()" 2>/dev/null || true
-    echo "-> Windows Desktop shortcut created!"
+    powershell.exe -Command "\$WshShell = New-Object -ComObject WScript.Shell; \$Shortcut = \$WshShell.CreateShortcut('${DESKTOP_DIR}\\Meet-Town.lnk'); \$Shortcut.TargetPath = 'bash.exe'; \$Shortcut.Arguments = '${INSTALL_DIR}/start-meettown.sh'; \$Shortcut.IconLocation = '${INSTALL_DIR}\\client\\assets\\icon.svg'; \$Shortcut.Save()" 2>/dev/null || true
+    echo "-> Windows desktop shortcut with icon created!"
 fi
 
 echo "=================================================="
-echo "✅ Meet-Town successfully installed on your OS!"
-echo "You can now open Meet-Town directly from your Desktop icon!"
+echo "✅ Meet-Town successfully installed with App Icon!"
+echo "You can now find Meet-Town in your system app menu & desktop!"
 echo "=================================================="

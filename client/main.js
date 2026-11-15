@@ -16,6 +16,7 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1400,
     height: 900,
+    icon: path.join(__dirname, 'assets', 'icon.svg'),
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -36,7 +37,6 @@ function createWindow() {
     });
   }
 
-  // Restrict permission requests instead of blind approval
   if (mainWindow.webContents.session.setPermissionRequestHandler) {
     mainWindow.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
       if (permission === 'media' || permission === 'display-capture') {
