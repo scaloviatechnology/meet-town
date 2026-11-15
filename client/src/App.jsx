@@ -793,7 +793,7 @@ export default function App() {
 
       {/* Lightweight 2D Pixel Office Floor with Classy Tailored Room Furniture */}
       <div className="flex-1 relative bg-[#171c28] overflow-hidden flex flex-col">
-        <div className="flex-1 relative bg-[radial-gradient(#263042_1px,transparent_1px)] [background-size:28px_28px] overflow-hidden p-8 flex flex-col justify-around">
+        <div className="flex-1 relative bg-[radial-gradient(#263042_1px,transparent_1px)] [background-size:28px_28px] overflow-hidden p-6 flex flex-col justify-center gap-4">
 
           {/* Row 1: Dev Lounge & Design Studio */}
           <div className="flex justify-around gap-6">
