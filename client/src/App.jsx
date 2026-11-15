@@ -480,54 +480,113 @@ export default function App() {
     );
   }
 
-  // Helper component to render a Gather Town style room with desks, chairs, PCs, and bookshelves
-  const renderRoom = (title, accentColorBorder, accentColorBg) => (
-    <div className={`w-[46%] h-[280px] ${accentColorBg} border ${accentColorBorder} rounded-3xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden backdrop-blur-md`}>
-      {/* Room Title Header */}
-      <div className="flex items-center justify-between z-10">
-        <span className="text-xs font-black uppercase tracking-widest text-white/90 bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-700/50">
-          {title}
-        </span>
-        <span className="text-[10px] text-slate-400 font-medium">Gather Zone</span>
-      </div>
-
-      {/* Bookshelf on the side/top */}
-      <div className="absolute top-4 right-6 flex gap-1 bg-slate-900/80 p-1.5 rounded-lg border border-slate-700/60">
-        <span className="text-xs">📚</span>
-        <span className="text-xs">📖</span>
-        <span className="text-xs">📁</span>
-      </div>
-
-      {/* Desks, Chairs & PCs in the center of the room */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="grid grid-cols-2 gap-8 items-center">
-          {/* Workstation 1 */}
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-6 bg-slate-800 border border-slate-600 rounded-md flex items-center justify-center shadow-md">
-              <span className="text-[10px]">🖥️</span>
-            </div>
-            <div className="w-14 h-4 bg-slate-700/80 border border-slate-600 rounded-sm -mt-0.5 shadow-sm"></div>
-            <div className="w-6 h-6 rounded-full bg-indigo-600/40 border border-indigo-400/50 -mt-2 flex items-center justify-center text-[10px]">🪑</div>
-          </div>
-
-          {/* Workstation 2 */}
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-6 bg-slate-800 border border-slate-600 rounded-md flex items-center justify-center shadow-md">
-              <span className="text-[10px]">💻</span>
-            </div>
-            <div className="w-14 h-4 bg-slate-700/80 border border-slate-600 rounded-sm -mt-0.5 shadow-sm"></div>
-            <div className="w-6 h-6 rounded-full bg-indigo-600/40 border border-indigo-400/50 -mt-2 flex items-center justify-center text-[10px]">🪑</div>
-          </div>
+  // Classy Gather Town Room Builder with room-specific tailored furniture
+  const renderClassyRoom = (title, type, accentBorder, accentBg) => {
+    return (
+      <div className={`w-[46%] h-[270px] ${accentBg} border ${accentBorder} rounded-3xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden backdrop-blur-xl`}>
+        {/* Room Header */}
+        <div className="flex items-center justify-between z-10">
+          <span className="text-xs font-black uppercase tracking-widest text-white/90 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60 shadow-md">
+            {title}
+          </span>
+          <span className="text-[10px] text-indigo-300 font-semibold bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20">
+            Interactive Zone
+          </span>
         </div>
-      </div>
 
-      {/* Room Footer plant / decor */}
-      <div className="absolute bottom-3 left-4 flex gap-2 text-xs opacity-80">
-        <span>🪴</span>
-        <span>🛋️</span>
+        {/* Room-specific Tailored Classy Furniture */}
+        {type === 'dev' && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            {/* Bookshelf top */}
+            <div className="absolute top-4 right-6 bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-inner text-xs">
+              <span>📚</span><span>💻</span><span>Server Rack</span>
+            </div>
+            {/* Dual Coding Workstations */}
+            <div className="grid grid-cols-2 gap-12 items-center">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-8 bg-slate-800 border border-slate-600 rounded-lg flex items-center justify-center shadow-xl">
+                  <span className="text-xs">🖥️</span>
+                </div>
+                <div className="w-20 h-5 bg-slate-700/90 border border-slate-600 rounded-md -mt-0.5 shadow-md"></div>
+                <div className="w-7 h-7 rounded-full bg-indigo-600/50 border border-indigo-400/60 -mt-2.5 flex items-center justify-center text-xs shadow">🪑</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-8 bg-slate-800 border border-slate-600 rounded-lg flex items-center justify-center shadow-xl">
+                  <span className="text-xs">🖥️</span>
+                </div>
+                <div className="w-20 h-5 bg-slate-700/90 border border-slate-600 rounded-md -mt-0.5 shadow-md"></div>
+                <div className="w-7 h-7 rounded-full bg-indigo-600/50 border border-indigo-400/60 -mt-2.5 flex items-center justify-center text-xs shadow">🪑</div>
+              </div>
+            </div>
+            <div className="absolute bottom-3 left-4 text-xs opacity-75">🪴 Plant</div>
+          </div>
+        )}
+
+        {type === 'design' && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute top-4 right-6 bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-inner text-xs">
+              <span>🎨</span><span>🖌️</span><span>Color Palette</span>
+            </div>
+            {/* Creative Drawing Tables */}
+            <div className="grid grid-cols-2 gap-12 items-center">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-8 bg-purple-900/50 border border-purple-500/60 rounded-lg flex items-center justify-center shadow-xl">
+                  <span className="text-xs">🖼️</span>
+                </div>
+                <div className="w-20 h-5 bg-slate-700/90 border border-slate-600 rounded-md -mt-0.5 shadow-md"></div>
+                <div className="w-7 h-7 rounded-full bg-purple-600/50 border border-purple-400/60 -mt-2.5 flex items-center justify-center text-xs shadow">🪑</div>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-8 bg-purple-900/50 border border-purple-500/60 rounded-lg flex items-center justify-center shadow-xl">
+                  <span className="text-xs">📐</span>
+                </div>
+                <div className="w-20 h-5 bg-slate-700/90 border border-slate-600 rounded-md -mt-0.5 shadow-md"></div>
+                <div className="w-7 h-7 rounded-full bg-purple-600/50 border border-purple-400/60 -mt-2.5 flex items-center justify-center text-xs shadow">🪑</div>
+              </div>
+            </div>
+            <div className="absolute bottom-3 left-4 text-xs opacity-75">🛋️ Lounge Couch</div>
+          </div>
+        )}
+
+        {type === 'warroom' && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute top-4 right-6 bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-inner text-xs">
+              <span>📊</span><span>📋</span><span>Whiteboard</span>
+            </div>
+            {/* Large Conference Table */}
+            <div className="flex flex-col items-center">
+              <div className="w-36 h-12 bg-slate-800 border border-emerald-500/40 rounded-xl flex items-center justify-center shadow-2xl">
+                <span className="text-xs font-bold text-emerald-300">Conference Table</span>
+              </div>
+              <div className="flex gap-8 -mt-1">
+                <div className="w-7 h-7 rounded-full bg-emerald-600/50 border border-emerald-400/60 flex items-center justify-center text-xs shadow">🪑</div>
+                <div className="w-7 h-7 rounded-full bg-emerald-600/50 border border-emerald-400/60 flex items-center justify-center text-xs shadow">🪑</div>
+                <div className="w-7 h-7 rounded-full bg-emerald-600/50 border border-emerald-400/60 flex items-center justify-center text-xs shadow">🪑</div>
+              </div>
+            </div>
+            <div className="absolute bottom-3 left-4 text-xs opacity-75">🌱 Ficus Plant</div>
+          </div>
+        )}
+
+        {type === 'coffee' && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute top-4 right-6 bg-slate-900/90 border border-slate-700/80 px-3 py-1 rounded-xl flex items-center gap-1.5 shadow-inner text-xs">
+              <span>☕</span><span>🍩</span><span>Coffee Bar</span>
+            </div>
+            {/* Round Coffee Table & Relaxing Sofas */}
+            <div className="flex items-center gap-6">
+              <div className="w-7 h-7 rounded-full bg-amber-600/50 border border-amber-400/60 flex items-center justify-center text-xs shadow">🛋️</div>
+              <div className="w-16 h-10 bg-amber-950/60 border border-amber-500/40 rounded-full flex items-center justify-center shadow-xl">
+                <span className="text-xs">☕ Table</span>
+              </div>
+              <div className="w-7 h-7 rounded-full bg-amber-600/50 border border-amber-400/60 flex items-center justify-center text-xs shadow">🛋️</div>
+            </div>
+            <div className="absolute bottom-3 left-4 text-xs opacity-75">🎸 Chill Area</div>
+          </div>
+        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="flex h-screen bg-[#121620] overflow-hidden select-none text-white font-sans">
@@ -720,20 +779,20 @@ export default function App() {
         </div>
       )}
 
-      {/* Lightweight 2D Pixel Office Floor with Gather Town Furniture (Desks, Chairs, PCs, Bookshelves) */}
+      {/* Lightweight 2D Pixel Office Floor with Classy Tailored Room Furniture */}
       <div className="flex-1 relative bg-[#171c28] overflow-hidden flex flex-col">
         <div className="flex-1 relative bg-[radial-gradient(#263042_1px,transparent_1px)] [background-size:28px_28px] overflow-hidden p-8 flex flex-col justify-around">
 
           {/* Row 1: Dev Lounge & Design Studio */}
           <div className="flex justify-around gap-6">
-            {renderRoom("💻 Dev Lounge", "border-indigo-500/30", "bg-indigo-950/20")}
-            {renderRoom("🎨 Design Studio", "border-purple-500/30", "bg-purple-950/20")}
+            {renderClassyRoom("💻 Dev Lounge", "dev", "border-indigo-500/30", "bg-indigo-950/25")}
+            {renderClassyRoom("🎨 Design Studio", "design", "border-purple-500/30", "bg-purple-950/25")}
           </div>
 
           {/* Row 2: Standup War Room & Coffee Corner */}
           <div className="flex justify-around gap-6">
-            {renderRoom("⚡ Standup & War Room", "border-emerald-500/30", "bg-emerald-950/20")}
-            {renderRoom("☕ Coffee & Chill Corner", "border-amber-500/30", "bg-amber-950/20")}
+            {renderClassyRoom("⚡ Standup & War Room", "warroom", "border-emerald-500/30", "bg-emerald-950/25")}
+            {renderClassyRoom("☕ Coffee & Chill Corner", "coffee", "border-amber-500/30", "bg-amber-950/25")}
           </div>
 
           {/* My Avatar */}
@@ -987,7 +1046,7 @@ function RemoteVideoPill({ peerId, stream, allUsers, onFullscreen }) {
       </div>
       <button
         onClick={() => onFullscreen(stream, user?.name || 'Peer')}
-        className="absolute inst-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center cursor-pointer text-white gap-1 text-xs font-bold"
+        className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center cursor-pointer text-white gap-1 text-xs font-bold"
       >
         <Maximize2 className="w-4 h-4" /> Fullscreen
       </button>
