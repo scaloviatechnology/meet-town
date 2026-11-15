@@ -50,9 +50,9 @@ export default function App() {
   const [myPos, setMyPos] = useState({ x: 300, y: 300 });
   const [otherPositions, setOtherPositions] = useState({});
 
-  // Media states
-  const [micActive, setMicActive] = useState(true);
-  const [camActive, setCamActive] = useState(true);
+  // Media states: Start with mic & camera OFF by default upon entering office
+  const [micActive, setMicActive] = useState(false);
+  const [camActive, setCamActive] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [fullscreenStream, setFullscreenStream] = useState(null);
 
@@ -136,8 +136,12 @@ export default function App() {
     });
     setSocket(newSocket);
 
+    // Get user media but set initial track enabled states to false (mic & cam OFF by default)
     navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 360, frameRate: 24 }, audio: true })
       .then((stream) => {
+        stream.getAudioTracks().forEach(t => t.enabled = false);
+        stream.getVideoTracks().forEach(t => t.enabled = false);
+
         localStreamRef.current = stream;
         if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
@@ -480,7 +484,7 @@ export default function App() {
     );
   }
 
-  // Classy Gather Town Room Builder with room-specific tailored furniture
+  // Classy Gather Town Room Builder with room-specific tailored furniture (NO interactive zone text)
   const renderClassyRoom = (title, type, accentBorder, accentBg) => {
     return (
       <div className={`w-[46%] h-[270px] ${accentBg} border ${accentBorder} rounded-3xl p-6 flex flex-col justify-between shadow-2xl relative overflow-hidden backdrop-blur-xl`}>
@@ -488,9 +492,6 @@ export default function App() {
         <div className="flex items-center justify-between z-10">
           <span className="text-xs font-black uppercase tracking-widest text-white/90 bg-slate-900/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60 shadow-md">
             {title}
-          </span>
-          <span className="text-[10px] text-indigo-300 font-semibold bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20">
-            Interactive Zone
           </span>
         </div>
 
@@ -613,10 +614,14 @@ export default function App() {
         </div>
       )}
 
-      {/* Top Floating Video Pills - Centered Align */}
+      {/* Top Floating Video Pills - Centered Align with Fullscreen on click */}
       <div className="absolute top-4 left-6 right-80 z-40 flex justify-center gap-3 overflow-x-auto pb-2 pointer-events-auto">
         {/* Local Video Pill */}
-        <div className="relative bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden w-40 h-24 shadow-xl flex items-center justify-center shrink-0">
+        <div
+          onClick={() => setFullscreenStream({ stream: localStreamRef.current, name: `${userName} (You)` })}
+          className="relative group bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden w-40 h-24 shadow-xl flex items-center justify-center shrink-0 cursor-pointer"
+          title="Click for Fullscreen"
+        >
           <video ref={localVideoRef} autoPlay muted playsInline className={`w-full h-full object-cover ${!camActive ? 'hidden' : ''}`} />
           {!camActive && (
             <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-xl shadow overflow-hidden">
@@ -626,21 +631,25 @@ export default function App() {
           <div className="absolute bottom-1.5 left-2 bg-slate-900/90 px-2 py-0.5 rounded-full text-[10px] font-medium text-slate-200">
             You {isScreenSharing && '• Sharing'}
           </div>
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
+            <Maximize2 className="w-4 h-4" /> Fullscreen
+          </div>
         </div>
 
         {/* Screen Share Pill */}
         {isScreenSharing && (
-          <div className="relative group bg-slate-950 border border-indigo-500/50 rounded-2xl overflow-hidden w-52 h-24 shadow-xl flex items-center justify-center shrink-0">
+          <div
+            onClick={() => setFullscreenStream({ stream: screenStreamRef.current, name: `${userName}'s Screen` })}
+            className="relative group bg-slate-950 border border-indigo-500/50 rounded-2xl overflow-hidden w-52 h-24 shadow-xl flex items-center justify-center shrink-0 cursor-pointer"
+            title="Click for Fullscreen"
+          >
             <video ref={screenVideoRef} autoPlay playsInline className="w-full h-full object-contain bg-black" />
             <div className="absolute bottom-1.5 left-2 bg-indigo-600 px-2 py-0.5 rounded-full text-[10px] font-medium text-white">
               Your Screen
             </div>
-            <button
-              onClick={() => setFullscreenStream({ stream: screenStreamRef.current, name: `${userName}'s Screen` })}
-              className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center cursor-pointer text-white gap-1 text-xs font-bold"
-            >
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
               <Maximize2 className="w-4 h-4" /> Fullscreen
-            </button>
+            </div>
           </div>
         )}
 
@@ -1039,17 +1048,18 @@ function RemoteVideoPill({ peerId, stream, allUsers, onFullscreen }) {
   }, [stream]);
 
   return (
-    <div className="relative group bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden w-40 h-24 shadow-xl flex items-center justify-center shrink-0">
+    <div
+      onClick={() => onFullscreen(stream, user?.name || 'Peer')}
+      className="relative group bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden w-40 h-24 shadow-xl flex items-center justify-center shrink-0 cursor-pointer"
+      title="Click for Fullscreen"
+    >
       <video ref={videoRef} autoPlay playsInline className="w-full h-full object-cover" />
       <div className="absolute bottom-1.5 left-2 bg-slate-900/90 px-2 py-0.5 rounded-full text-[10px] font-medium text-slate-200">
         {user?.name || 'Peer'} {user?.isScreenSharing && '• Sharing'}
       </div>
-      <button
-        onClick={() => onFullscreen(stream, user?.name || 'Peer')}
-        className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center cursor-pointer text-white gap-1 text-xs font-bold"
-      >
+      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
         <Maximize2 className="w-4 h-4" /> Fullscreen
-      </button>
+      </div>
     </div>
   );
 }
