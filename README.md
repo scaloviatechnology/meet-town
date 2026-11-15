@@ -34,9 +34,18 @@ git clone https://github.com/scaloviatechnology/meet-town.git ~/.meettown && cd 
 
 ---
 
+## 🔄 How to Update to the Latest Version
+If you already have Meet-Town installed and want to pull the latest features and bug fixes, open your terminal and run:
+```bash
+cd ~/.meettown && bash update.sh
+```
+
+---
+
 ## Features
 - **Gather Town 2D Pixel Office Map**: Interactive office floor where avatars move smoothly using W A S D or Arrow Keys across zones (Dev Lounge, Design Studio).
 - **Cartoon Avatars & Custom Photo Upload**: Choose pre-set cartoon avatars or upload any custom photo from your computer. Your profile and avatar persist automatically (`localStorage`).
 - **P2P Video Meetings & Screen Sharing**: High-quality peer-to-peer video/audio streams and desktop screen sharing with Fullscreen view support.
 - **Team Members Sidebar**: Real-time list tracking active online and offline team members.
 - **Direct Meeting Invites & Profile Modals**: Click any member's avatar to view their profile and invite them to a private meeting or call with instant in-app alerts.
+- **Edit Your Profile**: Click on your own name/avatar badge in the sidebar or bottom dock to instantly update your name, status, or avatar photo.
